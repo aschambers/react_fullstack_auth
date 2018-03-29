@@ -9,7 +9,16 @@ class Header extends Component {
 		// inspect auth property and change header as appropriate
 		switch(this.props.auth) {
 			case null:
-				return ''
+				return (
+					<div>
+						<li>
+							<Link to="/register">Register</Link>
+						</li>
+						<li>
+							<Link to="/login">Login</Link>
+						</li>
+					</div>
+				);
 			case false:
 				return (
 					<div>

@@ -3,15 +3,10 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { userSignupRequest } from '../actions/index';
+import Dashboard from './Dashboard';
 // field component only knows how to interact with redux-form, not render anything on screen
 class SignupForm extends Component {
 
-	constructor() {
-        super();
-        this.state = {
-          myName:'Name'
-        };
-    }
 
 	static contextTypes = {
   		router: PropTypes.object.isRequired
@@ -81,44 +76,93 @@ class SignupForm extends Component {
 				alert('Email already in use.');
 			}
 		});
-		window.location.reload();
-		this.context.router.history.push('/');
+	}
+
+	renderContent() {
+		const { handleSubmit } = this.props;
+		switch(this.props.auth) {
+			case null:
+				return (
+					<div>
+						<h3 style={{ textAlign: 'center' }}>Register</h3>
+						<form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={{ width: '50%', margin: '0 auto', marginTop: '2em' }}>
+							<Field
+								label="Name"
+								name="name"
+								component={this.renderField}
+							/>
+							<Field
+								label="Email"
+								name="email"
+								component={this.renderField}
+							/>
+							<Field
+								label="Username"
+								name="username"
+								component={this.renderField}
+							/>
+							<Field
+								label="Password"
+								name="password"
+								component={this.passField}
+							/>
+							<Field
+								label="Confirm Password"
+								name="passconfirm"
+								component={this.passField}
+							/>
+							<button type="submit" style={{ float: 'right' }} className="">Submit</button>
+						</form>
+					</div>
+				);
+			case false:
+				return (
+					<div>
+						<h3 style={{ textAlign: 'center' }}>Register</h3>
+						<form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={{ width: '50%', margin: '0 auto', marginTop: '2em' }}>
+							<Field
+								label="Name"
+								name="name"
+								component={this.renderField}
+							/>
+							<Field
+								label="Email"
+								name="email"
+								component={this.renderField}
+							/>
+							<Field
+								label="Username"
+								name="username"
+								component={this.renderField}
+							/>
+							<Field
+								label="Password"
+								name="password"
+								component={this.passField}
+							/>
+							<Field
+								label="Confirm Password"
+								name="passconfirm"
+								component={this.passField}
+							/>
+							<button type="submit" style={{ float: 'right' }} className="">Submit</button>
+						</form>
+					</div>
+				);
+			default:
+				return (
+					<Dashboard />
+				);
+
+		}
 	}
 
 	// can name label anything we want and have it show up in renderField function
 	render() {
-		// handle form submission, run reduxForm side of things with error checking
-		const { handleSubmit } = this.props; 
 		return (
-			// we need to bind this because we are receiving a callback
-			<form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={{ width: '50%', margin: '0 auto', marginTop: '2em' }}>
-				<Field
-					label="Name"
-					name="name"
-					component={this.renderField}
-				/>
-				<Field
-					label="Email"
-					name="email"
-					component={this.renderField}
-				/>
-				<Field
-					label="Username"
-					name="username"
-					component={this.renderField}
-				/>
-				<Field
-					label="Password"
-					name="password"
-					component={this.passField}
-				/>
-				<Field
-					label="Confirm Password"
-					name="passconfirm"
-					component={this.passField}
-				/>
-				<button type="submit" style={{ float: 'right' }} className="">Submit</button>
-			</form>
+			<div>
+				{this.renderContent()}
+			</div>
 		);
 	}
 }

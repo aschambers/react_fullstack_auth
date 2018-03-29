@@ -3,6 +3,7 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { userLoginRequest } from '../actions/index';
+import Dashboard from './Dashboard';
 // field component only knows how to interact with redux-form, not render anything on screen
 class LoginForm extends Component {
 
@@ -88,25 +89,62 @@ class LoginForm extends Component {
 		// this.context.router.history.push('/');
 	}
 
+	renderContent() {
+		const { handleSubmit } = this.props; 
+		switch(this.props.auth) {
+			case null:
+				return (
+					<div>
+						<h3 style={{ textAlign: 'center' }}>Login</h3>
+						<form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={{ width: '50%', margin: '0 auto', marginTop: '2em' }}>
+							<Field
+								label="Username"
+								name="username"
+								component={this.renderField}
+							/>
+							<Field
+								label="Password"
+								name="password"
+								component={this.passField}
+							/>
+							<button type="submit" style={{ float: 'right' }} className="">Submit</button>
+						</form>
+					</div>
+				);
+			case false:
+				return (
+					<div>
+						<h3 style={{ textAlign: 'center' }}>Login</h3>
+						<form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={{ width: '50%', margin: '0 auto', marginTop: '2em' }}>
+							<Field
+								label="Username"
+								name="username"
+								component={this.renderField}
+							/>
+							<Field
+								label="Password"
+								name="password"
+								component={this.passField}
+							/>
+							<button type="submit" style={{ float: 'right' }} className="">Submit</button>
+						</form>
+					</div>
+				);
+			default:
+				return (
+					<Dashboard />
+				); 
+		}
+	}
+
 	// can name label anything we want and have it show up in renderField function
 	render() {
 		// handle form submission, run reduxForm side of things with error checking
-		const { handleSubmit } = this.props; 
+		// const { handleSubmit } = this.props; 
 		return (
-			// we need to bind this because we are receiving a callback
-			<form onSubmit={handleSubmit(this.onSubmit.bind(this))} style={{ width: '50%', margin: '0 auto', marginTop: '2em' }}>
-				<Field
-					label="Username"
-					name="username"
-					component={this.renderField}
-				/>
-				<Field
-					label="Password"
-					name="password"
-					component={this.passField}
-				/>
-				<button type="submit" style={{ float: 'right' }} className="">Submit</button>
-			</form>
+			<div>
+				{this.renderContent()}
+			</div>
 		);
 	}
 }
